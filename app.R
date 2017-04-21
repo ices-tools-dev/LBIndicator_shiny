@@ -161,11 +161,10 @@ ui <- tagList(
                           ) # textInput
                         ), #sidebarPanel
                         mainPanel(
-                          h3("Plots go here"),
-                          h4("Steps:"),
+                          h3("Length-based Indicator plots"),
+                          # h4(""),
                           tags$ol(
-                            tags$li("Fill in the name of your stock if you want to download summary "),
-                            tags$li("If the length frequencies displayed are not correct, please review the raw data")
+                            HTML("Enter the L<sub>&#x221e</sub>, L<sub>mat</sub>, and m/k ratio parameters")
                           ),
                           # Reactive table 
                           plotOutput("lb_indicator_plot")   
@@ -215,7 +214,7 @@ ui <- tagList(
                       h3("Sources:"),
                       p("The application was created by Scott Large from example R code generously supplied to WKLIFE5 by T. Miethe and C. Silva. Inspiration for the application was drawn from J. Cope and A. Hordyk."),
                       p("The application should be used as a tool to explore data and a thorough audit of the length based indicators should be conducted before they can be used for decision making."),
-                      p("Source code can be found at https://github.com/ices-tools-dev/LBI_shiny. Questions and issues should be directed to the github repository.")
+                      p("Source code can be found at https://github.com/ices-tools-dev/LBIndicator_shiny. Questions and issues should be directed to the github repository.")
              ) #tabPanel
   ) # NavbarPage
 ) #tagList
@@ -599,7 +598,8 @@ server <- function(input, output, session) {
       
       validate(
         need(input$linf_value, "Enter Linf"),
-        need(input$lmat_value, "Enter Lmat")
+        need(input$lmat_value, "Enter Lmat"),
+        need(input$mk_ratio, "Enter M/K ratio")
       )
       
       lb_doc(data = dat,
@@ -607,6 +607,7 @@ server <- function(input, output, session) {
              l_units = input$length_units,
              linf = input$linf_value,
              lmat = input$lmat_value,
+             mk_ratio = input$mk_ratio,
              stock = input$stock_name,
              weight = wght,
              filename = file)
@@ -650,7 +651,8 @@ server <- function(input, output, session) {
       
       validate(
         need(input$linf_value, "Enter Linf"),
-        need(input$lmat_value, "Enter Lmat")
+        need(input$lmat_value, "Enter Lmat"),
+        need(input$mk_ratio, "Enter M/k ratio")
       )
       
       png(file,
@@ -666,6 +668,7 @@ server <- function(input, output, session) {
               l_units = input$length_units,
               linf = input$linf_value,
               lmat = input$lmat_value,
+              mk_ratio = input$mk_ratio,
               weight = wght)
       
       dev.off()

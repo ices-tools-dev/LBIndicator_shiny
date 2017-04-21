@@ -551,6 +551,7 @@ lb_doc <- function(data,
                    l_units,
                    linf,
                    lmat,
+                   mk_ratio,
                    stock,
                    weight,
                    filename) {
@@ -585,6 +586,7 @@ lb_doc <- function(data,
           l_units,
           linf,
           lmat,
+          mk_ratio,
           weight)
   dev.off()
   
@@ -631,6 +633,7 @@ lb_doc <- function(data,
                                                 l_units,
                                                 linf,
                                                 lmat,
+                                                mk_ratio,
                                                 weight),
                            bookmark = "INDICATOR_TABLE")
   
