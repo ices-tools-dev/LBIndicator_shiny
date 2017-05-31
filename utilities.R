@@ -198,7 +198,12 @@ lb_ind <- function(data,
                                   "number"]) / sum(final2$number)
     Ind[j, "Year"] <- Year[j]
     Ind[j, "Pmegaref"] <- 0.3   # proxy reference point of 30% in catch
-    Ind[j, "LFeM"] <- 0.75 * Ind[j, "Lc"] + 0.25 * Ind[j, "Linf"]
+    
+    fmsyM_ratio <- 1
+    gamma_LFeM <- fmsyM_ratio
+    theta_LFeM <- 1/mk_ratio
+    Ind[j, "LFeM"] <- (theta_LFeM * Ind[j, "Linf"] + Ind[j, "Lc"] * (gamma_LFeM + 1))/(theta_LFeM + gamma_LFeM + 1)
+    #Ind[j, "LFeM"] <- 0.75 * Ind[j, "Lc"] + 0.25 * Ind[j, "Linf"]
   }
   
   #calculate various ratios
