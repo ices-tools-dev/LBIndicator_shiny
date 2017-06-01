@@ -120,28 +120,16 @@ lb_ind <- function(data,
   
   # newDat <- bin_mat(data, binwidth)
 
-  for (j in 3:ncol(newDat)) {
-    for (i in 2:nrow(newDat)) {
-      if(newDat[i + 1, j] - newDat[i, j] >= 0) {
-        next
-      } else {
-        res$lmidp[j-2] <- newDat$lmidp[i]
-        res$nmax[j-2] <- newDat[i,j]
-        a <- res$nmax[j - 2] / 2
-        df1 <- newDat[, c(2, j)]
-        for (k in 1:nrow(df1)) {
-          if (df1[k, 2] < a) {
-            next
-          } else {  
-            res$lc[j - 2] <- df1[k, 1]
-          }
-          break
-        }
-      }
-      break
-    }
+  for(j in 3:ncol(newDat)) {
+    index.max <- which.max(newDat[, j])
+    res$lmidp[j-2] <- newDat$lmidp[index.max]
+    res$nmax[j-2] <- newDat[index.max, j]
+    a <- 0.5 * res$nmax[j-2]
+    possible.lc <- which(newDat[1:index.max, j] >= a)
+    lc <- newDat$lmidp[possible.lc[1]]
+    res$lc[j-2] <- lc
   }
-  
+    
   Ind$Lc <- res$lc
   Ind$Lmat <- lmat
   Ind$Lopt <- linf * (3 / (3 + mk_ratio))
@@ -198,7 +186,12 @@ lb_ind <- function(data,
                                   "number"]) / sum(final2$number)
     Ind[j, "Year"] <- Year[j]
     Ind[j, "Pmegaref"] <- 0.3   # proxy reference point of 30% in catch
-    Ind[j, "LFeM"] <- 0.75 * Ind[j, "Lc"] + 0.25 * Ind[j, "Linf"]
+    
+    fmsyM_ratio <- 1
+    gamma_LFeM <- fmsyM_ratio
+    theta_LFeM <- 1/mk_ratio
+    Ind[j, "LFeM"] <- (theta_LFeM * Ind[j, "Linf"] + Ind[j, "Lc"] * (gamma_LFeM + 1))/(theta_LFeM + gamma_LFeM + 1)
+    #Ind[j, "LFeM"] <- 0.75 * Ind[j, "Lc"] + 0.25 * Ind[j, "Linf"]
   }
   
   #calculate various ratios
